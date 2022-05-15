@@ -13,14 +13,17 @@ const server = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    //await generateFakeData(10, 5, 30);//
+
     console.log("mongodb is connected");
 
     app.use(express.json());
     app.use("/blog", BlogRouter);
     app.use("/user", UserRouter);
 
-    app.listen(3000, () => console.log("server is listing on port 3000"));
+    app.listen(3000, async () => {
+      console.log("server is listing on port 3000");
+      // await generateFakeData(100000, 5, 10);
+    });
   } catch (error) {
     console.log(error);
   }

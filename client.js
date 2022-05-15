@@ -37,22 +37,17 @@ const test = async () => {
 const test2 = async () => {
   console.time("time:");
   let {
-    data: { blogs },
-  } = await axios.get(`${URI}/blog`);
+    data: { users },
+  } = await axios.get(`${URI}/user`);
   console.timeEnd("time:");
 };
 
 const timetest = async () => {
   await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
-  await test2();
+  // await test2();
+  // await test2();
+  // await test2();
+  // await test2();
 };
 
 timetest();

@@ -12,20 +12,20 @@ BlogRouter.post("/", async (req, res) => {
   try {
     const { title, main, islive, userId } = req.body;
     if (typeof title !== "string") {
-      res.status(400).send({ error: "title is required" });
+      return res.status(400).send({ error: "title is required" });
     }
     if (typeof main !== "string") {
-      res.status(400).send({ error: "main is required" });
+      return res.status(400).send({ error: "main is required" });
     }
-    if (islive && islive !== "boolean") {
-      res.status(400).send({ error: "islive is must be a boolean" });
+    if (islive && typeof islive !== "boolean") {
+      return res.status(400).send({ error: "islive is must be a boolean" });
     }
     if (!isValidObjectId(userId)) {
-      res.status(400).send({ error: "userId is invalid" });
+      return res.status(400).send({ error: "userId is invalid" });
     }
     let user = await User.findById(userId);
     if (!user) {
-      res.status(400).send({ error: "user doesn't exist" });
+      return res.status(400).send({ error: "user doesn't exist" });
     }
 
     let blog = new Blog({ ...req.body, user });
@@ -39,12 +39,17 @@ BlogRouter.post("/", async (req, res) => {
 
 BlogRouter.get("/", async (req, res) => {
   try {
+    let { page } = req.query;
+    page = parseInt(page);
+    console.log(page);
     const blogs = await Blog.find({})
-      .limit(20)
-      .populate([
-        { path: "user" },
-        { path: "comments", populate: { path: "user" } },
-      ]);
+      .sort({ updatedAt: -1 })
+      .skip(20 * page)
+      .limit(20);
+    // .populate([
+    //   { path: "user" },
+    //   { path: "comments", populate: { path: "user" } },
+    // ]);
     return res.send({ blogs });
   } catch (error) {
     console.log({ error: error });
